@@ -21,7 +21,7 @@ function ScoreBadge({ score, max }: { score: number; max: number }) {
 }
 
 export function EvaluationReport({ result, scenarioTitle, onRestart }: Props) {
-  const { total_score, max_score, criteria, overall_feedback } = result
+  const { total_score, max_score, criteria, strengths: overall_feedback } = result
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6">
@@ -50,13 +50,13 @@ export function EvaluationReport({ result, scenarioTitle, onRestart }: Props) {
           <div className="space-y-3">
             {criteria.map((c, i) => (
               <div key={i} className={`flex gap-3 p-3 rounded-xl border ${
-                c.passed
+                c.score >= 5
                   ? 'bg-emerald-950/30 border-emerald-800/50'
                   : 'bg-red-950/30 border-red-900/50'
               }`}>
-                <span className="text-lg shrink-0 mt-0.5">{c.passed ? '✅' : '❌'}</span>
+                <span className="text-lg shrink-0 mt-0.5">{c.score >= 5 ? '✅' : '❌'}</span>
                 <div>
-                  <p className={`text-sm font-medium ${c.passed ? 'text-emerald-300' : 'text-red-300'}`}>
+                  <p className={`text-sm font-medium ${c.score >= 5 ? 'text-emerald-300' : 'text-red-300'}`}>
                     {c.name}
                   </p>
                   <p className="text-xs text-navy-400 mt-0.5">{c.comment}</p>

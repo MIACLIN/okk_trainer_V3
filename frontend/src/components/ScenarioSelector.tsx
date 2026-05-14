@@ -2,13 +2,6 @@ import { useEffect, useState } from 'react'
 import { api, DISC_META, patientPhotoUrl, ScenarioInfo } from '../api'
 import { NewPatientModal } from './NewPatientModal'
 
-interface CustomPatient {
-  scenario_id: string
-  avatar_url: string
-  name: string
-  disc_type: string
-}
-
 interface Props {
   onSelect: (scenario: ScenarioInfo) => void
 }
