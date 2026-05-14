@@ -212,7 +212,7 @@ export default function App() {
                   <div className="mx-5 mt-4 mb-2 card p-4 shrink-0">
                     <div className="flex items-start gap-3">
                       <img
-                        src={patientPhotoUrl(activeScenario.patient_photo_id)}
+                        src={activeScenario.patient_photo_url || patientPhotoUrl(activeScenario.patient_photo_id)}
                         alt={activeScenario.patient_name}
                         className="w-10 h-10 rounded-full object-cover object-top shrink-0 bg-gray-200"
                         onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}

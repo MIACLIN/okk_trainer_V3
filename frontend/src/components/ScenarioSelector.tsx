@@ -113,7 +113,7 @@ function PatientCard({
 }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const disc = DISC_META[s.patient_disc_type] ?? DISC_META['S']
-  const photoSrc = customAvatar || (s.patient_photo_id > 0 ? patientPhotoUrl(s.patient_photo_id) : null)
+  const photoSrc = customAvatar || s.patient_photo_url || (s.patient_photo_id > 0 ? patientPhotoUrl(s.patient_photo_id) : null)
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation()

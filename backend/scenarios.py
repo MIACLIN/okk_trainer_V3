@@ -44,6 +44,7 @@ class PatientCard(TypedDict):
     profession: str
     disc_type: str
     photo_id: int
+    photo_url: str  # local path like /patients/marina.jpg, overrides photo_id if set
     system_prompt: str
     gender: str  # male | female
 
@@ -71,6 +72,7 @@ SCENARIOS: dict[str, Scenario] = {
             "profession": "Учитель",
             "disc_type": "S",
             "photo_id": 47,
+            "photo_url": "/patients/marina.jpg",
             "gender": "female",
             "system_prompt": _BASE_PATIENT_PROMPT + """ТВОЙ ТИПАЖ — «БОИТСЯ»:
 Ты сильно боишься стоматологов. Много лет не ходила из-за страха боли.
@@ -109,6 +111,7 @@ SCENARIOS: dict[str, Scenario] = {
             "profession": "Менеджер по продажам",
             "disc_type": "D",
             "photo_id": 52,
+            "photo_url": "/patients/andrey.jpg",
             "gender": "male",
             "system_prompt": _BASE_PATIENT_PROMPT + """ТВОЙ ТИПАЖ — «ТОРГУЕТСЯ»:
 Тебя всё устраивает, кроме цены. Ты уже был в 2 других клиниках,
@@ -147,6 +150,7 @@ SCENARIOS: dict[str, Scenario] = {
             "profession": "Инженер",
             "disc_type": "C",
             "photo_id": 53,
+            "photo_url": "/patients/viktor.jpg",
             "gender": "male",
             "system_prompt": _BASE_PATIENT_PROMPT + """ТВОЙ ТИПАЖ — «МОЛЧУН»:
 Ты немногословен. Отвечаешь односложно: «да», «нет», «давно», «не знаю».
@@ -194,6 +198,7 @@ def list_scenarios() -> list[dict]:
             "patient_profession": s["patient"]["profession"],
             "patient_disc_type": s["patient"]["disc_type"],
             "patient_photo_id": s["patient"]["photo_id"],
+            "patient_photo_url": s["patient"].get("photo_url", ""),
             "checklist": s["checklist"],
             "opening_line": s["opening_line"],
         }

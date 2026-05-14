@@ -12,6 +12,7 @@ export interface ScenarioInfo {
   patient_profession: string
   patient_disc_type: string
   patient_photo_id: number
+  patient_photo_url?: string
   checklist: string[]
   opening_line: string
 }
@@ -22,6 +23,7 @@ export interface ActiveScenario {
   patient_name: string
   patient_disc_type: string
   patient_photo_id: number
+  patient_photo_url?: string
   context: string
   checklist: string[]
 }

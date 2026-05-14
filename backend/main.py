@@ -211,6 +211,7 @@ async def start_session(req: StartSessionRequest):
             "patient_name": scenario["patient"]["name"],
             "patient_disc_type": scenario["patient"]["disc_type"],
             "patient_photo_id": scenario["patient"]["photo_id"],
+            "patient_photo_url": scenario["patient"].get("photo_url", ""),
             "context": scenario["context"],
             "checklist": scenario["checklist"],
         },

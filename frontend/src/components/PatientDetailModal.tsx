@@ -36,7 +36,7 @@ export function PatientDetailModal({ scenario: s, onStart, onClose, loading }: P
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Пациент</p>
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
               <img
-                src={patientPhotoUrl(s.patient_photo_id)}
+                src={s.patient_photo_url || patientPhotoUrl(s.patient_photo_id)}
                 alt={s.patient_name}
                 className="w-10 h-10 rounded-full object-contain shrink-0 bg-gray-100"
                 onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
