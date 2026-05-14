@@ -1,9 +1,11 @@
 interface Props {
   onHome: () => void
+  onHistory: () => void
   inSession: boolean
+  screen: string
 }
 
-export function Sidebar({ onHome, inSession }: Props) {
+export function Sidebar({ onHome, onHistory, inSession, screen }: Props) {
   return (
     <aside className="w-52 shrink-0 bg-white border-r border-gray-100 flex flex-col h-screen">
       {/* Logo */}
@@ -16,12 +18,25 @@ export function Sidebar({ onHome, inSession }: Props) {
         <button
           onClick={onHome}
           className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left transition-colors
-            ${inSession ? 'text-gray-600 hover:bg-gray-50' : 'bg-indigo-50 text-indigo-700 font-medium'}`}
+            ${screen === 'select' || screen === 'session' ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-600 hover:bg-gray-50'}`}
         >
           <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
           </svg>
           Тренажер
+        </button>
+
+        <button
+          onClick={onHistory}
+          disabled={inSession}
+          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left transition-colors
+            ${screen === 'history' || screen === 'history-detail' ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-600 hover:bg-gray-50'}
+            ${inSession ? 'opacity-40 cursor-not-allowed' : ''}`}
+        >
+          <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          История
         </button>
 
         <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-gray-500 hover:bg-gray-50 transition-colors">

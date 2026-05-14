@@ -5,17 +5,19 @@ import {
 } from './api'
 import { AnalyticsPanel } from './components/AnalyticsPanel'
 import { ConversationView, Message } from './components/ConversationView'
+import { HistoryDetail } from './components/HistoryDetail'
+import { HistoryList } from './components/HistoryList'
 import { PatientDetailModal } from './components/PatientDetailModal'
 import { ScenarioSelector } from './components/ScenarioSelector'
 import { Sidebar } from './components/Sidebar'
 import { VoiceRecorder, VoiceRecorderRef } from './components/VoiceRecorder'
 
-type Screen = 'select' | 'session'
+type Screen = 'select' | 'session' | 'history' | 'history-detail'
 type PatientStatus = 'connecting' | 'idle' | 'recording' | 'processing' | 'speaking'
 
 const STATUS_LABEL: Record<PatientStatus, string> = {
   connecting: 'Устанавливаем связь с сервером',
-  idle:       'Нажмите микрофон или пробел, чтобы говорить',
+  idle:       '',
   recording:  'Идёт запись...',
   processing: 'Обработка...',
   speaking:   'Пациент отвечает...',
@@ -44,6 +46,7 @@ export default function App() {
   const [error, setError]                 = useState<string | null>(null)
   const [evaluation, setEvaluation]       = useState<EvaluationResult | null>(null)
   const [isEvaluating, setIsEvaluating]   = useState(false)
+  const [historyId, setHistoryId]         = useState<number | null>(null)
   const timerRunning = screen === 'session' && status !== 'connecting'
   const timer = useTimer(timerRunning)
   const processingRef = useRef(false)
@@ -51,13 +54,11 @@ export default function App() {
 
   const isProcessing = status === 'processing' || status === 'speaking' || status === 'connecting'
 
-  /* ---- open modal ---- */
   const handleCardClick = useCallback((s: ScenarioInfo) => {
     setSelected(s)
     setShowModal(true)
   }, [])
 
-  /* ---- start session ---- */
   const handleStart = useCallback(async () => {
     if (!selectedScenario) return
     setStatus('connecting')
@@ -137,7 +138,6 @@ export default function App() {
     }
   }, [sessionId, activeScenario, handleEvaluate])
 
-  /* ---- go home ---- */
   const handleHome = useCallback(() => {
     setScreen('select')
     setSelected(null)
@@ -150,16 +150,42 @@ export default function App() {
     processingRef.current = false
   }, [])
 
+  const handleHistory = useCallback(() => {
+    if (screen === 'session') return
+    setScreen('history')
+  }, [screen])
+
+  const handleHistoryDetail = useCallback((id: number) => {
+    setHistoryId(id)
+    setScreen('history-detail')
+  }, [])
+
   const disc = activeScenario ? DISC_META[activeScenario.patient_disc_type] : null
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <Sidebar onHome={handleHome} inSession={screen === 'session'} />
+      <Sidebar
+        onHome={handleHome}
+        onHistory={handleHistory}
+        inSession={screen === 'session'}
+        screen={screen}
+      />
 
       <div className="flex-1 flex flex-col overflow-hidden">
+
         {/* ===== SELECT SCREEN ===== */}
         {screen === 'select' && (
           <ScenarioSelector onSelect={handleCardClick} />
+        )}
+
+        {/* ===== HISTORY LIST ===== */}
+        {screen === 'history' && (
+          <HistoryList onSelect={handleHistoryDetail} />
+        )}
+
+        {/* ===== HISTORY DETAIL ===== */}
+        {screen === 'history-detail' && historyId !== null && (
+          <HistoryDetail id={historyId} onBack={() => setScreen('history')} />
         )}
 
         {/* ===== SESSION SCREEN ===== */}
@@ -228,7 +254,6 @@ export default function App() {
 
                 {/* Bottom bar */}
                 <div className="shrink-0 border-t border-gray-100 bg-white px-5 py-3 flex items-center gap-4">
-                  {/* Status dot + label */}
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <span className={`w-2 h-2 rounded-full shrink-0 ${
                       status === 'connecting' ? 'bg-gray-400 animate-pulse'
@@ -240,7 +265,6 @@ export default function App() {
                     <span className="text-xs text-gray-500 truncate">{STATUS_LABEL[status]}</span>
                   </div>
 
-                  {/* Mic */}
                   <VoiceRecorder
                     ref={recorderRef}
                     onRecordingComplete={handleRecording}
@@ -248,10 +272,8 @@ export default function App() {
                     disabled={isProcessing}
                   />
 
-                  {/* Timer */}
                   <span className="text-sm font-mono text-gray-600 w-12 text-center shrink-0">{timer}</span>
 
-                  {/* End call */}
                   <button
                     onClick={handleEvaluate}
                     disabled={isProcessing || isEvaluating || messages.length < 2}

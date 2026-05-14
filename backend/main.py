@@ -1,17 +1,17 @@
-import asyncio
 import base64
 import io
 import os
 import tempfile
 import uuid
 
+import edge_tts
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from faster_whisper import WhisperModel
-from gtts import gTTS
 from pydantic import BaseModel
 
+import database
 import evaluator
 import patient_agent
 from scenarios import SCENARIOS, get_scenario, list_scenarios
@@ -28,21 +28,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
+whisper_model = WhisperModel("small", device="cpu", compute_type="int8")
+
+database.init_db()
+
+TTS_VOICE = "ru-RU-SvetlanaNeural"
 
 
 # ---------- helpers ----------
 
-def _tts_sync(text: str) -> str:
-    tts = gTTS(text=text, lang="ru", slow=False)
+async def text_to_audio_base64(text: str) -> str:
+    communicate = edge_tts.Communicate(text, TTS_VOICE)
     buf = io.BytesIO()
-    tts.write_to_fp(buf)
+    async for chunk in communicate.stream():
+        if chunk["type"] == "audio":
+            buf.write(chunk["data"])
     buf.seek(0)
     return base64.b64encode(buf.read()).decode("utf-8")
-
-
-async def text_to_audio_base64(text: str) -> str:
-    return await asyncio.to_thread(_tts_sync, text)
 
 
 def audio_base64_to_text(audio_b64: str) -> str:
@@ -74,8 +76,8 @@ class EvaluateRequest(BaseModel):
 
 class CreatePatientRequest(BaseModel):
     name: str
-    gender: str       # male | female
-    disc_type: str    # D, I, S, C
+    gender: str
+    disc_type: str
     reason: str
     hidden_need: str
     opening_line: str
@@ -199,7 +201,7 @@ async def send_message(req: MessageRequest):
         "patient_response_text": patient_text,
         "patient_response_audio_base64": audio_b64,
         "session_ended": session_ended,
-        "end_reason": end_reason,   # "записался" | "ушёл" | ""
+        "end_reason": end_reason,
     }
 
 
@@ -215,9 +217,30 @@ def evaluate(req: EvaluateRequest):
         raise HTTPException(status_code=422, detail="Разговор слишком короткий для оценки")
 
     result = evaluator.evaluate_session(session["scenario"], history)
+
+    database.save_session(
+        scenario_title=session["scenario"]["title"],
+        patient_name=session["scenario"]["patient"]["name"],
+        transcript=history,
+        evaluation=result,
+    )
+
     patient_agent.delete_session(req.session_id)
 
     return result
+
+
+@app.get("/history")
+def get_history():
+    return database.list_sessions()
+
+
+@app.get("/history/{history_id}")
+def get_history_item(history_id: int):
+    item = database.get_session(history_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Not found")
+    return item
 
 
 @app.get("/health")

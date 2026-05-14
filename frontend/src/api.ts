@@ -102,6 +102,27 @@ export const api = {
 
   deletePatient: (scenario_id: string): Promise<{ ok: boolean }> =>
     request(`/patient/${scenario_id}`, { method: 'DELETE' }),
+
+  listHistory: (): Promise<HistoryItem[]> => request('/history'),
+  getHistory: (id: number): Promise<HistoryDetail> => request(`/history/${id}`),
+}
+
+export interface HistoryItem {
+  id: number
+  scenario_title: string
+  patient_name: string
+  created_at: string
+  total_score: number
+  level: string
+}
+
+export interface HistoryDetail {
+  id: number
+  scenario_title: string
+  patient_name: string
+  created_at: string
+  transcript: { role: string; content: string }[]
+  evaluation: EvaluationResult
 }
 
 export function audioBufferToBase64(blob: Blob): Promise<string> {

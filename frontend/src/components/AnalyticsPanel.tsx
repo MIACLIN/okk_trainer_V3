@@ -33,7 +33,7 @@ export function AnalyticsPanel({ checklist, evaluation, isEvaluating }: Props) {
   const [openError, setOpenError] = useState<number | null>(null)
 
   return (
-    <div className="w-72 shrink-0 border-l border-gray-100 bg-white flex flex-col">
+    <div className="w-96 shrink-0 border-l border-gray-100 bg-white flex flex-col">
       <div className="px-5 py-4 border-b border-gray-100 shrink-0">
         <h3 className="font-semibold text-gray-900 text-sm">Аналитика разговора</h3>
         {!evaluation && (
