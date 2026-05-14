@@ -22,13 +22,7 @@ app = FastAPI(title="OKK Voice Trainer API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "https://okk-trainer-v3.vercel.app",
-        "https://okk-trainer-v3-git-main-miaclins-projects.vercel.app",
-        "https://*.vercel.app",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
