@@ -45,6 +45,7 @@ class PatientCard(TypedDict):
     disc_type: str
     photo_id: int
     system_prompt: str
+    gender: str  # male | female
 
 
 class Scenario(TypedDict):
@@ -70,6 +71,7 @@ SCENARIOS: dict[str, Scenario] = {
             "profession": "Учитель",
             "disc_type": "S",
             "photo_id": 47,
+            "gender": "female",
             "system_prompt": _BASE_PATIENT_PROMPT + """ТВОЙ ТИПАЖ — «БОИТСЯ»:
 Ты сильно боишься стоматологов. Много лет не ходила из-за страха боли.
 Пришла только потому что шатается мостик и уже невозможно терпеть.
@@ -107,6 +109,7 @@ SCENARIOS: dict[str, Scenario] = {
             "profession": "Менеджер по продажам",
             "disc_type": "D",
             "photo_id": 52,
+            "gender": "male",
             "system_prompt": _BASE_PATIENT_PROMPT + """ТВОЙ ТИПАЖ — «ТОРГУЕТСЯ»:
 Тебя всё устраивает, кроме цены. Ты уже был в 2 других клиниках,
 везде называли похожие суммы, но ты всё равно ищешь скидку или рассрочку.
@@ -144,6 +147,7 @@ SCENARIOS: dict[str, Scenario] = {
             "profession": "Инженер",
             "disc_type": "C",
             "photo_id": 53,
+            "gender": "male",
             "system_prompt": _BASE_PATIENT_PROMPT + """ТВОЙ ТИПАЖ — «МОЛЧУН»:
 Ты немногословен. Отвечаешь односложно: «да», «нет», «давно», «не знаю».
 Не рассказываешь историю сам — только если куратор задаёт конкретный вопрос.

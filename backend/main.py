@@ -32,12 +32,13 @@ whisper_model = WhisperModel("small", device="cpu", compute_type="int8")
 
 database.init_db()
 
-TTS_VOICE = "ru-RU-SvetlanaNeural"
+VOICE_FEMALE = "alena"
+VOICE_MALE   = "filipp"
 
 
 # ---------- helpers ----------
 
-async def text_to_audio_base64(text: str) -> str:
+async def text_to_audio_base64(text: str, gender: str = "female") -> str:
     yandex_key = os.environ.get("YANDEX_TTS_KEY")
     yandex_folder = os.environ.get("YANDEX_FOLDER_ID")
 
@@ -52,7 +53,7 @@ async def text_to_audio_base64(text: str) -> str:
                     data={
                         "text": text,
                         "lang": "ru-RU",
-                        "voice": "alena",
+                        "voice": VOICE_FEMALE if gender == "female" else VOICE_MALE,
                         "folderId": yandex_folder,
                         "format": "mp3",
                         "sampleRateHertz": "48000",
@@ -160,6 +161,7 @@ def create_patient(req: CreatePatientRequest):
             "profession": "",
             "disc_type": req.disc_type,
             "photo_id": 0,
+            "gender": req.gender,
             "system_prompt": system_prompt,
         },
         "context": req.reason,
@@ -196,7 +198,8 @@ async def start_session(req: StartSessionRequest):
         {"role": "assistant", "content": opening_text}
     )
 
-    audio_b64 = await text_to_audio_base64(opening_text)
+    gender = scenario["patient"].get("gender", "female")
+    audio_b64 = await text_to_audio_base64(opening_text, gender)
 
     return {
         "session_id": session_id,
@@ -225,7 +228,8 @@ async def send_message(req: MessageRequest):
         raise HTTPException(status_code=422, detail="Не удалось распознать речь — говорите чётче")
 
     patient_text, session_ended, end_reason = patient_agent.get_patient_response(req.session_id, user_text)
-    audio_b64 = await text_to_audio_base64(patient_text)
+    gender = patient_agent.sessions[req.session_id]["scenario"]["patient"].get("gender", "female")
+    audio_b64 = await text_to_audio_base64(patient_text, gender)
 
     return {
         "user_transcript": user_text,
