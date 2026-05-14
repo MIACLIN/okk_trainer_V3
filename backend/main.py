@@ -6,6 +6,7 @@ import uuid
 
 import edge_tts
 from dotenv import load_dotenv
+from gtts import gTTS
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from faster_whisper import WhisperModel
@@ -38,13 +39,27 @@ TTS_VOICE = "ru-RU-SvetlanaNeural"
 # ---------- helpers ----------
 
 async def text_to_audio_base64(text: str) -> str:
-    communicate = edge_tts.Communicate(text, TTS_VOICE)
-    buf = io.BytesIO()
-    async for chunk in communicate.stream():
-        if chunk["type"] == "audio":
-            buf.write(chunk["data"])
-    buf.seek(0)
-    return base64.b64encode(buf.read()).decode("utf-8")
+    try:
+        communicate = edge_tts.Communicate(text, TTS_VOICE)
+        buf = io.BytesIO()
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                buf.write(chunk["data"])
+        buf.seek(0)
+        data = buf.read()
+        if data:
+            return base64.b64encode(data).decode("utf-8")
+    except Exception:
+        pass
+    # fallback to gTTS
+    def _gtts():
+        tts = gTTS(text=text, lang="ru", slow=False)
+        b = io.BytesIO()
+        tts.write_to_fp(b)
+        b.seek(0)
+        return base64.b64encode(b.read()).decode("utf-8")
+    import asyncio
+    return await asyncio.to_thread(_gtts)
 
 
 def audio_base64_to_text(audio_b64: str) -> str:
