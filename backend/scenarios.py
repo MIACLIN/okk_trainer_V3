@@ -72,7 +72,7 @@ SCENARIOS: dict[str, Scenario] = {
             "profession": "Учитель",
             "disc_type": "S",
             "photo_id": 47,
-            "photo_url": "/patients/marina.jpg",
+            "photo_url": "/patients/marina.png",
             "gender": "female",
             "system_prompt": _BASE_PATIENT_PROMPT + """ТВОЙ ТИПАЖ — «БОИТСЯ»:
 Ты сильно боишься стоматологов. Много лет не ходила из-за страха боли.
@@ -111,7 +111,7 @@ SCENARIOS: dict[str, Scenario] = {
             "profession": "Менеджер по продажам",
             "disc_type": "D",
             "photo_id": 52,
-            "photo_url": "/patients/andrey.jpg",
+            "photo_url": "/patients/andrey.png",
             "gender": "male",
             "system_prompt": _BASE_PATIENT_PROMPT + """ТВОЙ ТИПАЖ — «ТОРГУЕТСЯ»:
 Тебя всё устраивает, кроме цены. Ты уже был в 2 других клиниках,
@@ -150,7 +150,7 @@ SCENARIOS: dict[str, Scenario] = {
             "profession": "Инженер",
             "disc_type": "C",
             "photo_id": 53,
-            "photo_url": "/patients/viktor.jpg",
+            "photo_url": "/patients/viktor.png",
             "gender": "male",
             "system_prompt": _BASE_PATIENT_PROMPT + """ТВОЙ ТИПАЖ — «МОЛЧУН»:
 Ты немногословен. Отвечаешь односложно: «да», «нет», «давно», «не знаю».

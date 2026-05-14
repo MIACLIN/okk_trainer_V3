@@ -112,6 +112,7 @@ function PatientCard({
   onDelete: (id: string) => void
 }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [imgError, setImgError] = useState(false)
   const disc = DISC_META[s.patient_disc_type] ?? DISC_META['S']
   const photoSrc = customAvatar || s.patient_photo_url || (s.patient_photo_id > 0 ? patientPhotoUrl(s.patient_photo_id) : null)
 
@@ -129,11 +130,12 @@ function PatientCard({
     <div className="card overflow-hidden flex flex-col">
       {/* Photo — object-contain so nothing is cropped */}
       <div className="relative h-56 bg-gray-100 flex items-center justify-center overflow-hidden">
-        {photoSrc ? (
+        {photoSrc && !imgError ? (
           <img
             src={photoSrc}
             alt={s.patient_name}
             className="h-full w-full object-contain"
+            onError={() => setImgError(true)}
           />
         ) : (
           <div className={`w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold border-4 ${disc.bg}`}>
