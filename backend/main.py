@@ -4,7 +4,6 @@ import os
 import tempfile
 import uuid
 
-import edge_tts
 from dotenv import load_dotenv
 from gtts import gTTS
 from fastapi import FastAPI, HTTPException
@@ -39,18 +38,35 @@ TTS_VOICE = "ru-RU-SvetlanaNeural"
 # ---------- helpers ----------
 
 async def text_to_audio_base64(text: str) -> str:
-    try:
-        communicate = edge_tts.Communicate(text, TTS_VOICE)
-        buf = io.BytesIO()
-        async for chunk in communicate.stream():
-            if chunk["type"] == "audio":
-                buf.write(chunk["data"])
-        buf.seek(0)
-        data = buf.read()
-        if data:
+    yandex_key = os.environ.get("YANDEX_TTS_KEY")
+    yandex_folder = os.environ.get("YANDEX_FOLDER_ID")
+
+    if yandex_key and yandex_folder:
+        try:
+            import asyncio
+            def _yandex():
+                import requests as req
+                r = req.post(
+                    "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize",
+                    headers={"Authorization": f"Api-Key {yandex_key}"},
+                    data={
+                        "text": text,
+                        "lang": "ru-RU",
+                        "voice": "alena",
+                        "folderId": yandex_folder,
+                        "format": "mp3",
+                        "sampleRateHertz": "48000",
+                    },
+                    timeout=10,
+                )
+                r.raise_for_status()
+                return r.content
+            data = await asyncio.to_thread(_yandex)
+            print(f"[TTS] Yandex OK ({len(data)} bytes)")
             return base64.b64encode(data).decode("utf-8")
-    except Exception:
-        pass
+        except Exception as e:
+            print(f"[TTS] Yandex failed: {e}, falling back to gTTS")
+
     # fallback to gTTS
     def _gtts():
         tts = gTTS(text=text, lang="ru", slow=False)

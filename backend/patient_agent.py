@@ -26,6 +26,7 @@ _END_INSTRUCTION = """
 Формат: просто текст реплики[КОНЕЦ:записался] — без пробела перед тегом."""
 
 _END_PATTERN = re.compile(r'\s*\[КОНЕЦ:(записался|ушёл)\]')
+_ACTION_PATTERN = re.compile(r'\([^)]*\)')
 
 # In-memory session store: session_id -> {scenario, history}
 sessions: dict[str, dict] = {}
@@ -69,7 +70,8 @@ def get_patient_response(session_id: str, user_message: str) -> tuple[str, bool,
     match = _END_PATTERN.search(raw)
     session_ended = bool(match)
     end_reason = match.group(1) if match else ""
-    patient_text = _END_PATTERN.sub("", raw).strip()
+    patient_text = _END_PATTERN.sub("", raw)
+    patient_text = _ACTION_PATTERN.sub("", patient_text).strip()
 
     history.append({"role": "assistant", "content": patient_text})
 
