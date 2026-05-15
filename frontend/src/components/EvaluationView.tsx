@@ -201,7 +201,7 @@ export function EvaluationView({
           </div>
 
           {/* ── Col 3: Top errors (fixed right) ── */}
-          <div className="w-72 shrink-0 border-l border-gray-100 overflow-y-auto px-6 py-6 bg-white">
+          <div className="w-96 shrink-0 border-l border-gray-100 overflow-y-auto px-6 py-6 bg-white">
             <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-5">
               Главные ошибки сессии
             </p>
