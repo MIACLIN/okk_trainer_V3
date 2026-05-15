@@ -1,21 +1,40 @@
 import { useEffect, useState } from 'react'
 import { api, HistoryItem } from '../api'
 
-const LEVEL_COLOR: Record<string, string> = {
-  'Новичок':    'text-red-600 bg-red-50 border-red-200',
-  'Развивается':'text-amber-600 bg-amber-50 border-amber-200',
-  'Уверенный':  'text-blue-600 bg-blue-50 border-blue-200',
-  'Профи':      'text-emerald-600 bg-emerald-50 border-emerald-200',
-}
-
 interface Props {
   onSelect: (id: number) => void
 }
 
+function scoreCol(t: number) {
+  if (t >= 70) return { text: 'text-green-600', bg: 'bg-green-50', border: 'border-green-100' }
+  if (t >= 50) return { text: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100' }
+  return { text: 'text-red-500', bg: 'bg-red-50', border: 'border-red-100' }
+}
+
+function groupByDate(items: HistoryItem[]): { label: string; items: HistoryItem[] }[] {
+  const now = new Date()
+  const today = now.toDateString()
+  const yesterday = new Date(now.getTime() - 86_400_000).toDateString()
+  const map = new Map<string, HistoryItem[]>()
+
+  for (const item of items) {
+    const d = new Date(item.created_at)
+    const ds = d.toDateString()
+    const label =
+      ds === today     ? 'Сегодня' :
+      ds === yesterday ? 'Вчера'   :
+      d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })
+    if (!map.has(label)) map.set(label, [])
+    map.get(label)!.push(item)
+  }
+
+  return Array.from(map.entries()).map(([label, items]) => ({ label, items }))
+}
+
 export function HistoryList({ onSelect }: Props) {
-  const [items, setItems] = useState<HistoryItem[]>([])
+  const [items, setItems]   = useState<HistoryItem[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError]   = useState<string | null>(null)
 
   useEffect(() => {
     api.listHistory()
@@ -24,20 +43,21 @@ export function HistoryList({ onSelect }: Props) {
       .finally(() => setLoading(false))
   }, [])
 
-  const formatDate = (iso: string) => {
-    const d = new Date(iso)
-    return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
-      + ' ' + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
-  }
+  const groups = groupByDate(items)
+
+  const fmt = (iso: string) =>
+    new Date(iso).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto bg-gray-50">
       <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100 bg-white">
-        <h1 className="text-xl font-bold text-gray-900">История тренировок</h1>
-        <span className="text-xs text-gray-400">{items.length} сессий</span>
+        <h1 className="text-xl font-bold text-gray-900">Мои тренировки</h1>
+        <span className="text-xs text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full font-medium">
+          {items.length}
+        </span>
       </div>
 
-      <div className="px-8 py-6">
+      <div className="px-8 py-6 max-w-3xl">
         {loading && (
           <div className="flex items-center gap-3 text-gray-400 py-12 justify-center">
             <div className="w-5 h-5 border-2 border-gray-300 border-t-indigo-500 rounded-full animate-spin" />
@@ -50,53 +70,49 @@ export function HistoryList({ onSelect }: Props) {
           </div>
         )}
         {!loading && !error && items.length === 0 && (
-          <div className="flex flex-col items-center gap-3 py-16 text-gray-400">
+          <div className="flex flex-col items-center gap-3 py-20 text-gray-400">
             <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <p className="text-sm">Пока нет завершённых тренировок</p>
+            <p className="text-xs text-gray-300">Завершите первую сессию и она появится здесь</p>
           </div>
         )}
-        {!loading && !error && items.length > 0 && (
-          <div className="space-y-3 max-w-3xl">
-            {items.map(item => (
-              <button
-                key={item.id}
-                onClick={() => onSelect(item.id)}
-                className="w-full card p-4 flex items-center gap-4 hover:shadow-md transition-shadow text-left"
-              >
-                {/* Score circle */}
-                <div className={`w-14 h-14 rounded-full border-2 flex flex-col items-center justify-center shrink-0 ${
-                  item.total_score >= 80 ? 'border-emerald-400' : item.total_score >= 60 ? 'border-blue-400' : item.total_score >= 40 ? 'border-amber-400' : 'border-red-400'
-                }`}>
-                  <span className={`text-lg font-bold leading-none ${
-                    item.total_score >= 80 ? 'text-emerald-600' : item.total_score >= 60 ? 'text-blue-600' : item.total_score >= 40 ? 'text-amber-600' : 'text-red-500'
-                  }`}>{item.total_score}</span>
-                  <span className="text-[10px] text-gray-400">/ 100</span>
-                </div>
 
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-gray-900">{item.patient_name}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${LEVEL_COLOR[item.level] ?? LEVEL_COLOR['Развивается']}`}>
-                      {item.level}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-400 mt-0.5 truncate">{item.scenario_title}</p>
-                </div>
+        {!loading && !error && groups.map(group => (
+          <div key={group.label} className="mb-8">
+            <h2 className="text-base font-bold text-gray-900 mb-3">{group.label}</h2>
+            <div className="space-y-2">
+              {group.items.map(item => {
+                const sc = scoreCol(item.total_score)
+                const display = (item.total_score / 10).toFixed(1)
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onSelect(item.id)}
+                    className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3.5 flex items-center gap-4 hover:border-gray-200 hover:shadow-sm transition-all text-left"
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-xl ${sc.bg} border ${sc.border} flex items-center justify-center shrink-0`}
+                    >
+                      <span className={`text-base font-black ${sc.text}`}>{display}</span>
+                    </div>
 
-                {/* Date + arrow */}
-                <div className="text-right shrink-0">
-                  <p className="text-xs text-gray-400">{formatDate(item.created_at)}</p>
-                  <svg className="w-4 h-4 text-gray-300 mt-1 ml-auto" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </button>
-            ))}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 text-sm">{item.patient_name}</p>
+                      <p className="text-xs text-gray-400 mt-0.5 truncate">{item.scenario_title}</p>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <p className="text-xs text-gray-400">{fmt(item.created_at)}</p>
+                      <span className={`text-xs font-medium ${sc.text}`}>{item.level}</span>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
           </div>
-        )}
+        ))}
       </div>
     </div>
   )
