@@ -5,7 +5,7 @@ interface Props {
 
 export function AnalyticsPanel({ checklist, isEvaluating }: Props) {
   return (
-    <div className="w-64 shrink-0 border-l border-gray-100 bg-white flex flex-col">
+    <div className="hidden md:flex w-64 shrink-0 border-l border-gray-100 bg-white flex-col">
       <div className="px-5 py-4 border-b border-gray-100 shrink-0">
         <h3 className="font-semibold text-gray-800 text-sm">Критерии оценки</h3>
         <p className="text-xs text-gray-400 mt-0.5">Оценка появится после завершения</p>

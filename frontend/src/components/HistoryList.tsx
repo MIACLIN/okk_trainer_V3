@@ -50,14 +50,14 @@ export function HistoryList({ onSelect }: Props) {
 
   return (
     <div className="flex-1 overflow-y-auto bg-gray-50">
-      <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100 bg-white">
+      <div className="flex items-center justify-between px-4 sm:px-8 py-4 sm:py-5 border-b border-gray-100 bg-white">
         <h1 className="text-xl font-bold text-gray-900">Мои тренировки</h1>
         <span className="text-xs text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full font-medium">
           {items.length}
         </span>
       </div>
 
-      <div className="px-8 py-8 max-w-3xl mx-auto w-full">
+      <div className="px-4 sm:px-8 py-6 sm:py-8 max-w-3xl mx-auto w-full">
         {loading && (
           <div className="flex items-center gap-3 text-gray-400 py-12 justify-center">
             <div className="w-5 h-5 border-2 border-gray-300 border-t-indigo-500 rounded-full animate-spin" />

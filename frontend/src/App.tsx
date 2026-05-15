@@ -191,7 +191,7 @@ export default function App() {
             <div className="flex-1 flex flex-col overflow-hidden bg-white">
               {/* Breadcrumb */}
               <div className="border-b border-gray-100 bg-white shrink-0">
-                <div className="max-w-5xl mx-auto px-8 py-3.5 flex items-center gap-1.5 text-xs text-gray-500">
+                <div className="max-w-5xl mx-auto px-4 sm:px-8 py-3.5 flex items-center gap-1.5 text-xs text-gray-500">
                   <button onClick={handleHome} className="hover:text-gray-700 flex items-center gap-1 transition-colors">
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -205,7 +205,7 @@ export default function App() {
 
               {/* Patient card */}
               {activeScenario && (
-                <div className="max-w-5xl mx-auto w-full px-8 pt-5 pb-3 shrink-0">
+                <div className="max-w-5xl mx-auto w-full px-4 sm:px-8 pt-4 sm:pt-5 pb-3 shrink-0">
                   <div className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-2xl px-4 py-3">
                     <img
                       src={activeScenario.patient_photo_url || patientPhotoUrl(activeScenario.patient_photo_id)}
@@ -223,14 +223,14 @@ export default function App() {
               )}
 
               {/* Conversation */}
-              <div className="flex-1 flex flex-col overflow-hidden max-w-5xl mx-auto w-full px-8 pb-0">
+              <div className="flex-1 flex flex-col overflow-hidden max-w-5xl mx-auto w-full px-4 sm:px-8 pb-0">
                 <div className="flex-1 flex flex-col overflow-hidden bg-gray-50/40 rounded-2xl border border-gray-100">
                   <ConversationView messages={messages} isThinking={status === 'processing'} />
                 </div>
               </div>
 
               {error && (
-                <div className="max-w-5xl mx-auto w-full px-8 mt-2">
+                <div className="max-w-5xl mx-auto w-full px-4 sm:px-8 mt-2">
                   <div className="px-4 py-2 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs">
                     {error}
                   </div>
@@ -239,7 +239,7 @@ export default function App() {
 
               {/* Bottom bar */}
               <div className="shrink-0 border-t border-gray-100 bg-white py-4">
-                <div className="max-w-5xl mx-auto px-8 flex items-center gap-4">
+                <div className="max-w-5xl mx-auto px-4 sm:px-8 flex items-center gap-3 sm:gap-4">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <span className={`w-2 h-2 rounded-full shrink-0 ${
                       status === 'connecting' ? 'bg-gray-400 animate-pulse'
@@ -270,7 +270,7 @@ export default function App() {
                         <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
                       </svg>
                     )}
-                    Завершить звонок
+                    <span className="hidden sm:inline">Завершить </span>звонок
                   </button>
                 </div>
               </div>
