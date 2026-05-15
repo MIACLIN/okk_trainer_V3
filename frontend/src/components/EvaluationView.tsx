@@ -72,10 +72,10 @@ export function EvaluationView({
   const retryBtn  = !!onRetry
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-white">
+    <div className="flex-1 bg-white overflow-y-auto md:overflow-hidden md:flex md:flex-col">
 
       {/* ── Header ── */}
-      <div className="bg-white border-b border-gray-100 shrink-0">
+      <div className="bg-white border-b border-gray-100 md:shrink-0">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-4 sm:py-6">
           <div className="flex items-start gap-3 sm:gap-5">
 
@@ -167,7 +167,7 @@ export function EvaluationView({
 
       {/* ── Body ── */}
       {showTranscript ? (
-        <div className="flex-1 overflow-y-auto py-6 sm:py-8">
+        <div className="py-6 sm:py-8 md:flex-1 md:overflow-y-auto">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-3">
             {transcript?.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -184,8 +184,8 @@ export function EvaluationView({
         </div>
       ) : (
         <>
-          {/* ── Mobile: horizontal skill tabs ── */}
-          <div className="md:hidden border-b border-gray-100 overflow-x-auto shrink-0 bg-white">
+          {/* ── Mobile: sticky skill tabs ── */}
+          <div className="md:hidden sticky top-0 z-10 bg-white border-b border-gray-100 overflow-x-auto shadow-sm">
             <div className="flex px-4 py-3 gap-2">
               {evaluation.criteria.map((c, i) => {
                 const cs     = scoreCol(c.score)
@@ -209,7 +209,7 @@ export function EvaluationView({
           </div>
 
           {/* ── Mobile: stacked content ── */}
-          <div className="md:hidden flex-1 overflow-y-auto px-4 py-5 space-y-4">
+          <div className="md:hidden px-4 py-5 space-y-4 pb-10">
             {selected && (
               <>
                 <div className="bg-white border border-gray-200 rounded-2xl px-5 py-5">
