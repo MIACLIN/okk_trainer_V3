@@ -128,10 +128,10 @@ export function EvaluationView({
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex overflow-hidden max-w-[1400px] mx-auto w-full">
+        <div className="flex-1 flex overflow-hidden w-full">
 
           {/* ── Col 1: Skills list ── */}
-          <div className="w-64 shrink-0 border-r border-gray-100 overflow-y-auto bg-gray-50/40">
+          <div className="w-72 shrink-0 border-r border-gray-100 overflow-y-auto bg-gray-50/40">
             <p className="px-6 pt-6 pb-3 text-[11px] font-semibold text-gray-400 uppercase tracking-widest">
               Навыки
             </p>
@@ -164,7 +164,7 @@ export function EvaluationView({
           {/* ── Col 2: Criterion detail ── */}
           <div className="flex-1 overflow-y-auto px-10 py-8 min-w-0 bg-white">
             {selected && (
-              <div className="max-w-lg space-y-4">
+              <div className="space-y-4">
 
                 {/* Score */}
                 <div className="bg-white border border-gray-200 rounded-2xl px-6 py-6">
