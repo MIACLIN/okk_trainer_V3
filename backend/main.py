@@ -28,7 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-whisper_model = WhisperModel("small", device="cpu", compute_type="int8")
+whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
 
 database.init_db()
 
@@ -57,6 +57,7 @@ async def text_to_audio_base64(text: str, gender: str = "female") -> str:
                         "folderId": yandex_folder,
                         "format": "mp3",
                         "sampleRateHertz": "48000",
+                        "speed": "1.15",
                     },
                     timeout=10,
                 )

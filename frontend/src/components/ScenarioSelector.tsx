@@ -128,12 +128,12 @@ function PatientCard({
   return (
     <div className="card overflow-hidden flex flex-col">
       {/* Photo — object-contain so nothing is cropped */}
-      <div className="relative h-64 bg-gray-100 overflow-hidden">
+      <div className="relative h-80 bg-gray-100 overflow-hidden">
         {photoSrc && !imgError ? (
           <img
             src={photoSrc}
             alt={s.patient_name}
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-cover object-center"
             onError={() => setImgError(true)}
           />
         ) : (
