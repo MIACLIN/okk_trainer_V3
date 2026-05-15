@@ -128,7 +128,8 @@ export function EvaluationView({
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex overflow-hidden w-full">
+        <div className="flex-1 overflow-hidden flex justify-center">
+        <div className="flex overflow-hidden w-full max-w-[1400px]">
 
           {/* ── Col 1: Skills list ── */}
           <div className="w-72 shrink-0 border-r border-gray-100 overflow-y-auto bg-gray-50/40">
@@ -240,6 +241,7 @@ export function EvaluationView({
             )}
           </div>
 
+        </div>
         </div>
       )}
     </div>
