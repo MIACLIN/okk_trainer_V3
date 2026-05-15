@@ -190,20 +190,22 @@ export default function App() {
           <>
             <div className="flex-1 flex flex-col overflow-hidden bg-white">
               {/* Breadcrumb */}
-              <div className="flex items-center gap-1.5 px-8 py-3.5 border-b border-gray-100 bg-white text-xs text-gray-500 shrink-0">
-                <button onClick={handleHome} className="hover:text-gray-700 flex items-center gap-1 transition-colors">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                  </svg>
-                  Тренажер
-                </button>
-                <span className="text-gray-300">/</span>
-                <span className="text-gray-700 font-medium truncate">{activeScenario?.patient_name}</span>
+              <div className="border-b border-gray-100 bg-white shrink-0">
+                <div className="max-w-5xl mx-auto px-8 py-3.5 flex items-center gap-1.5 text-xs text-gray-500">
+                  <button onClick={handleHome} className="hover:text-gray-700 flex items-center gap-1 transition-colors">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Тренажер
+                  </button>
+                  <span className="text-gray-300">/</span>
+                  <span className="text-gray-700 font-medium truncate">{activeScenario?.patient_name}</span>
+                </div>
               </div>
 
               {/* Patient card */}
               {activeScenario && (
-                <div className="px-8 pt-5 pb-3 shrink-0">
+                <div className="max-w-5xl mx-auto w-full px-8 pt-5 pb-3 shrink-0">
                   <div className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-2xl px-4 py-3">
                     <img
                       src={activeScenario.patient_photo_url || patientPhotoUrl(activeScenario.patient_photo_id)}
@@ -221,52 +223,56 @@ export default function App() {
               )}
 
               {/* Conversation */}
-              <div className="flex-1 flex flex-col overflow-hidden px-8 pb-0">
+              <div className="flex-1 flex flex-col overflow-hidden max-w-5xl mx-auto w-full px-8 pb-0">
                 <div className="flex-1 flex flex-col overflow-hidden bg-gray-50/40 rounded-2xl border border-gray-100">
                   <ConversationView messages={messages} isThinking={status === 'processing'} />
                 </div>
               </div>
 
               {error && (
-                <div className="mx-8 mt-2 px-4 py-2 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs">
-                  {error}
+                <div className="max-w-5xl mx-auto w-full px-8 mt-2">
+                  <div className="px-4 py-2 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs">
+                    {error}
+                  </div>
                 </div>
               )}
 
               {/* Bottom bar */}
-              <div className="shrink-0 border-t border-gray-100 bg-white px-8 py-4 flex items-center gap-4">
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <span className={`w-2 h-2 rounded-full shrink-0 ${
-                    status === 'connecting' ? 'bg-gray-400 animate-pulse'
-                    : status === 'recording'  ? 'bg-red-500 animate-pulse'
-                    : status === 'speaking'   ? 'bg-emerald-500 animate-pulse'
-                    : status === 'processing' ? 'bg-amber-500 animate-pulse'
-                    : 'bg-gray-300'
-                  }`} />
-                  <span className="text-xs text-gray-500 truncate">{STATUS_LABEL[status]}</span>
+              <div className="shrink-0 border-t border-gray-100 bg-white py-4">
+                <div className="max-w-5xl mx-auto px-8 flex items-center gap-4">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${
+                      status === 'connecting' ? 'bg-gray-400 animate-pulse'
+                      : status === 'recording'  ? 'bg-red-500 animate-pulse'
+                      : status === 'speaking'   ? 'bg-emerald-500 animate-pulse'
+                      : status === 'processing' ? 'bg-amber-500 animate-pulse'
+                      : 'bg-gray-300'
+                    }`} />
+                    <span className="text-xs text-gray-500 truncate">{STATUS_LABEL[status]}</span>
+                  </div>
+
+                  <VoiceRecorder
+                    ref={recorderRef}
+                    onRecordingComplete={handleRecording}
+                    onRecordingStart={() => setStatus('recording')}
+                    disabled={isProcessing || isEvaluating}
+                  />
+
+                  <button
+                    onClick={handleEvaluate}
+                    disabled={isProcessing || isEvaluating || messages.length < 2}
+                    className="btn-danger text-sm shrink-0 gap-2"
+                  >
+                    {isEvaluating ? (
+                      <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                      </svg>
+                    )}
+                    Завершить звонок
+                  </button>
                 </div>
-
-                <VoiceRecorder
-                  ref={recorderRef}
-                  onRecordingComplete={handleRecording}
-                  onRecordingStart={() => setStatus('recording')}
-                  disabled={isProcessing || isEvaluating}
-                />
-
-                <button
-                  onClick={handleEvaluate}
-                  disabled={isProcessing || isEvaluating || messages.length < 2}
-                  className="btn-danger text-sm shrink-0 gap-2"
-                >
-                  {isEvaluating ? (
-                    <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-                    </svg>
-                  )}
-                  Завершить звонок
-                </button>
               </div>
             </div>
 

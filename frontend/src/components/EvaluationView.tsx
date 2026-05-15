@@ -162,7 +162,7 @@ export function EvaluationView({
           </div>
 
           {/* ── Col 2: Criterion detail ── */}
-          <div className="flex-1 overflow-y-auto px-10 py-8 min-w-0 bg-white">
+          <div className="flex-1 overflow-y-auto px-6 py-8 min-w-0 bg-white">
             {selected && (
               <div className="space-y-4">
 
