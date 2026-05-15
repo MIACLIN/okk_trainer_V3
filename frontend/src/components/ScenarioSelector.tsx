@@ -58,10 +58,11 @@ export function ScenarioSelector({ onSelect }: Props) {
         </div>
       </div>
 
-      <div className="px-8 py-6">
+      <div className="px-8 py-8">
+        <div className="max-w-6xl mx-auto">
         {loading && (
           <div className="flex items-center gap-3 text-gray-400 py-12 justify-center">
-            <div className="w-5 h-5 border-2 border-gray-300 border-t-indigo-500 rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
             Загрузка...
           </div>
         )}
@@ -69,13 +70,12 @@ export function ScenarioSelector({ onSelect }: Props) {
           <div className="bg-red-50 border border-red-200 rounded-xl p-5 text-center max-w-sm mx-auto">
             <p className="text-red-600 font-medium mb-1">Не удалось загрузить</p>
             <p className="text-red-400 text-xs">{error}</p>
-            <p className="text-gray-400 text-xs mt-1">Убедитесь, что бэкенд запущен на порту 8000</p>
           </div>
         )}
         {!loading && !error && (
           <>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Рекомендованные</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-5">Рекомендованные</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {scenarios.map(s => (
                 <PatientCard
                   key={s.id}
@@ -88,6 +88,7 @@ export function ScenarioSelector({ onSelect }: Props) {
             </div>
           </>
         )}
+        </div>
       </div>
 
       {showNew && (

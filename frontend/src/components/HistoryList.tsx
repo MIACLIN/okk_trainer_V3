@@ -57,7 +57,7 @@ export function HistoryList({ onSelect }: Props) {
         </span>
       </div>
 
-      <div className="px-8 py-6 max-w-3xl">
+      <div className="px-8 py-8 max-w-3xl mx-auto w-full">
         {loading && (
           <div className="flex items-center gap-3 text-gray-400 py-12 justify-center">
             <div className="w-5 h-5 border-2 border-gray-300 border-t-indigo-500 rounded-full animate-spin" />
