@@ -7,12 +7,10 @@ interface Props {
 
 export function TopNav({ screen, onHome, onHistory, inSession }: Props) {
   const isTraining = screen === 'select' || screen === 'session'
-  const isHistory = screen === 'history' || screen === 'history-detail'
+  const isHistory  = screen === 'history' || screen === 'history-detail'
 
   return (
-    <nav className="h-14 bg-white border-b border-gray-100 flex items-center px-6 shrink-0 z-10">
-      <span className="font-black text-indigo-600 text-lg tracking-tight mr-8 select-none">OKK.PRO</span>
-
+    <nav className="h-14 bg-white border-b border-gray-100 flex items-center px-6 shrink-0">
       <div className="flex items-center gap-1 flex-1">
         <button
           onClick={onHome}
@@ -20,7 +18,7 @@ export function TopNav({ screen, onHome, onHistory, inSession }: Props) {
           className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full transition-colors ${
             isTraining
               ? 'bg-gray-900 text-white'
-              : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'
+              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
           } disabled:opacity-40 disabled:cursor-not-allowed`}
         >
           <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -32,10 +30,10 @@ export function TopNav({ screen, onHome, onHistory, inSession }: Props) {
         <button
           onClick={onHistory}
           disabled={inSession}
-          className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
+          className={`text-sm px-4 py-2 rounded-full transition-colors ${
             isHistory
-              ? 'text-gray-900 font-semibold'
-              : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'
+              ? 'font-semibold text-gray-900'
+              : 'font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'
           } disabled:opacity-40 disabled:cursor-not-allowed`}
         >
           Мои тренировки
@@ -43,7 +41,7 @@ export function TopNav({ screen, onHome, onHistory, inSession }: Props) {
       </div>
 
       <div className="flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
+        <div className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-white text-xs font-bold shrink-0">
           D
         </div>
         <span className="text-sm font-medium text-gray-700 hidden sm:block">Demo</span>

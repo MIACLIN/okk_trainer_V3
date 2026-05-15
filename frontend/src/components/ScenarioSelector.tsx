@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api, DISC_META, patientPhotoUrl, ScenarioInfo } from '../api'
+import { api, patientPhotoUrl, ScenarioInfo } from '../api'
 import { NewPatientModal } from './NewPatientModal'
 
 interface Props {
@@ -113,7 +113,6 @@ function PatientCard({
 }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [imgError, setImgError] = useState(false)
-  const disc = DISC_META[s.patient_disc_type] ?? DISC_META['S']
   const photoSrc = customAvatar || s.patient_photo_url || (s.patient_photo_id > 0 ? patientPhotoUrl(s.patient_photo_id) : null)
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -129,17 +128,19 @@ function PatientCard({
   return (
     <div className="card overflow-hidden flex flex-col">
       {/* Photo — object-contain so nothing is cropped */}
-      <div className="relative h-56 bg-gray-100 flex items-center justify-center overflow-hidden">
+      <div className="relative h-64 bg-gray-100 overflow-hidden">
         {photoSrc && !imgError ? (
           <img
             src={photoSrc}
             alt={s.patient_name}
-            className="h-full w-full object-contain"
+            className="h-full w-full object-cover object-top"
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className={`w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold border-4 ${disc.bg}`}>
-            {s.patient_name.charAt(0)}
+          <div className="h-full flex items-center justify-center">
+            <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-3xl font-bold text-gray-400">
+              {s.patient_name.charAt(0)}
+            </div>
           </div>
         )}
 
@@ -181,12 +182,12 @@ function PatientCard({
           <p className="text-gray-500 text-xs mt-1 leading-relaxed">{s.description}</p>
         </div>
 
-        <span className={`inline-flex items-center gap-1 text-xs font-medium w-fit ${disc.color}`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {s.patient_disc_type}
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 w-fit">
+          <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+          DISC {s.patient_disc_type}
         </span>
 
-        <span className="self-start text-xs px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-100 font-medium">
+        <span className="self-start text-xs px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 border border-gray-200 font-medium">
           {s.skill_focus}
         </span>
 

@@ -1,4 +1,4 @@
-import { DISC_META, patientPhotoUrl, ScenarioInfo } from '../api'
+import { patientPhotoUrl, ScenarioInfo } from '../api'
 
 interface Props {
   scenario: ScenarioInfo
@@ -8,8 +8,6 @@ interface Props {
 }
 
 export function PatientDetailModal({ scenario: s, onStart, onClose, loading }: Props) {
-  const disc = DISC_META[s.patient_disc_type] ?? DISC_META['S']
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
@@ -90,9 +88,9 @@ export function PatientDetailModal({ scenario: s, onStart, onClose, loading }: P
           </div>
 
           {/* DISC */}
-          <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-sm font-medium ${disc.bg}`}>
-            <span className="w-2 h-2 rounded-full bg-current" />
-            DISC: {s.patient_disc_type} — {disc.label}
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-gray-50 text-sm font-medium text-gray-700">
+            <span className="w-2 h-2 rounded-full bg-gray-400" />
+            DISC: {s.patient_disc_type}
           </div>
 
           {/* Opening line */}
