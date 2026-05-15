@@ -160,7 +160,7 @@ export default function App() {
   const inSession = screen === 'session' && !evaluation
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 overflow-hidden">
+    <div className="flex flex-col h-screen bg-white overflow-hidden">
       <TopNav
         screen={screen}
         onHome={handleHome}
@@ -188,10 +188,10 @@ export default function App() {
         {/* ── SESSION: active call ── */}
         {screen === 'session' && !evaluation && (
           <>
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col overflow-hidden bg-white">
               {/* Breadcrumb */}
-              <div className="flex items-center gap-1.5 px-6 py-3 border-b border-gray-100 bg-white text-xs text-gray-500 shrink-0">
-                <button onClick={handleHome} className="hover:text-gray-700 flex items-center gap-1">
+              <div className="flex items-center gap-1.5 px-8 py-3.5 border-b border-gray-100 bg-white text-xs text-gray-500 shrink-0">
+                <button onClick={handleHome} className="hover:text-gray-700 flex items-center gap-1 transition-colors">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                   </svg>
@@ -203,42 +203,38 @@ export default function App() {
 
               {/* Patient card */}
               {activeScenario && (
-                <div className="mx-5 mt-4 mb-2 card p-4 shrink-0">
-                  <div className="flex items-start gap-3">
+                <div className="px-8 pt-5 pb-3 shrink-0">
+                  <div className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-2xl px-4 py-3">
                     <img
                       src={activeScenario.patient_photo_url || patientPhotoUrl(activeScenario.patient_photo_id)}
                       alt={activeScenario.patient_name}
-                      className="w-10 h-10 rounded-full object-cover object-top shrink-0 bg-gray-200"
+                      className="w-9 h-9 rounded-full object-cover object-top shrink-0 bg-gray-200"
                       onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold text-gray-900">{activeScenario.patient_name}</span>
-                      </div>
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        <span className="text-gray-500 font-medium">Контекст</span>{' '}
-                        {activeScenario.context}
-                      </p>
+                      <span className="font-semibold text-gray-900 text-sm">{activeScenario.patient_name}</span>
+                      <p className="text-xs text-gray-400 mt-0.5 truncate">{activeScenario.context}</p>
                     </div>
+                    <span className="text-xs font-mono text-gray-400 shrink-0">{timer}</span>
                   </div>
                 </div>
               )}
 
               {/* Conversation */}
-              <div className="flex-1 flex flex-col overflow-hidden mx-5 mb-0">
-                <div className="card flex-1 flex flex-col overflow-hidden">
+              <div className="flex-1 flex flex-col overflow-hidden px-8 pb-0">
+                <div className="flex-1 flex flex-col overflow-hidden bg-gray-50/40 rounded-2xl border border-gray-100">
                   <ConversationView messages={messages} isThinking={status === 'processing'} />
                 </div>
               </div>
 
               {error && (
-                <div className="mx-5 mt-2 px-4 py-2 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs">
+                <div className="mx-8 mt-2 px-4 py-2 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs">
                   {error}
                 </div>
               )}
 
               {/* Bottom bar */}
-              <div className="shrink-0 border-t border-gray-100 bg-white px-5 py-3 flex items-center gap-4">
+              <div className="shrink-0 border-t border-gray-100 bg-white px-8 py-4 flex items-center gap-4">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                   <span className={`w-2 h-2 rounded-full shrink-0 ${
                     status === 'connecting' ? 'bg-gray-400 animate-pulse'
@@ -256,8 +252,6 @@ export default function App() {
                   onRecordingStart={() => setStatus('recording')}
                   disabled={isProcessing || isEvaluating}
                 />
-
-                <span className="text-sm font-mono text-gray-600 w-12 text-center shrink-0">{timer}</span>
 
                 <button
                   onClick={handleEvaluate}

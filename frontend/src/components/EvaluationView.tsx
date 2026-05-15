@@ -46,15 +46,15 @@ export function EvaluationView({
   const sc       = scoreCol(selected?.score ?? 0)
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-[#f7f7f8]">
+    <div className="flex-1 flex flex-col overflow-hidden bg-white">
 
       {/* ── Header ── */}
       <div className="bg-white border-b border-gray-100 shrink-0">
         <div className="max-w-[1400px] mx-auto px-8 py-6">
           <div className="flex items-start gap-5">
 
-            <div className={`w-[72px] h-[72px] rounded-2xl ${mc.bg} border ${mc.border} flex items-center justify-center shrink-0`}>
-              <span className={`text-3xl font-black leading-none ${mc.text}`}>{displayScore}</span>
+            <div className={`w-[68px] h-[68px] rounded-2xl ${mc.bg} border ${mc.border} flex items-center justify-center shrink-0`}>
+              <span className={`text-[28px] font-black leading-none ${mc.text}`}>{displayScore}</span>
             </div>
 
             <div className="flex-1 min-w-0 pt-0.5">
@@ -97,8 +97,8 @@ export function EvaluationView({
           </div>
 
           {evaluation.strengths && (
-            <div className="mt-5 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 flex gap-3">
-              <span className="text-gray-400 shrink-0 mt-0.5 text-sm">✦</span>
+            <div className="mt-5 bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 flex gap-3">
+              <span className="text-gray-300 shrink-0 mt-0.5 text-sm">✦</span>
               <div>
                 <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
                   Общая рекомендация
@@ -119,7 +119,7 @@ export function EvaluationView({
                 <div className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                   msg.role === 'user'
                     ? 'bg-gray-900 text-white rounded-br-md'
-                    : 'bg-white border border-gray-200 text-gray-700 rounded-bl-md'
+                    : 'bg-gray-50 border border-gray-200 text-gray-700 rounded-bl-md'
                 }`}>
                   {msg.content}
                 </div>
@@ -131,8 +131,8 @@ export function EvaluationView({
         <div className="flex-1 flex overflow-hidden max-w-[1400px] mx-auto w-full">
 
           {/* ── Col 1: Skills list ── */}
-          <div className="w-56 shrink-0 border-r border-gray-100 bg-white overflow-y-auto">
-            <p className="px-5 pt-5 pb-2 text-[11px] font-semibold text-gray-400 uppercase tracking-widest">
+          <div className="w-64 shrink-0 border-r border-gray-100 overflow-y-auto bg-gray-50/40">
+            <p className="px-6 pt-6 pb-3 text-[11px] font-semibold text-gray-400 uppercase tracking-widest">
               Навыки
             </p>
             {evaluation.criteria.map((c, i) => {
@@ -142,17 +142,17 @@ export function EvaluationView({
                 <button
                   key={i}
                   onClick={() => setSelectedIdx(i)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all border-l-2 ${
+                  className={`w-full flex items-center gap-3.5 px-5 py-4 text-left transition-all border-l-2 ${
                     active
-                      ? 'bg-gray-50 border-gray-900'
-                      : 'border-transparent hover:bg-gray-50 hover:border-gray-200'
+                      ? 'bg-white border-gray-900'
+                      : 'border-transparent hover:bg-white/80 hover:border-gray-200'
                   }`}
                 >
-                  <div className={`w-8 h-8 rounded-lg ${cs.bg} border ${cs.border} flex items-center justify-center shrink-0`}>
-                    <span className={`text-xs font-black ${cs.text}`}>{c.score}</span>
+                  <div className={`w-10 h-10 rounded-2xl ${cs.bg} border ${cs.border} flex items-center justify-center shrink-0`}>
+                    <span className={`text-sm font-black ${cs.text}`}>{c.score}</span>
                   </div>
                   <p className={`flex-1 text-xs leading-snug ${
-                    active ? 'text-gray-900 font-semibold' : 'text-gray-600 font-medium'
+                    active ? 'text-gray-900 font-semibold' : 'text-gray-500 font-medium'
                   }`}>
                     {c.name}
                   </p>
@@ -162,25 +162,25 @@ export function EvaluationView({
           </div>
 
           {/* ── Col 2: Criterion detail ── */}
-          <div className="flex-1 overflow-y-auto px-8 py-7 min-w-0">
+          <div className="flex-1 overflow-y-auto px-10 py-8 min-w-0 bg-white">
             {selected && (
-              <div className="max-w-lg space-y-5">
+              <div className="max-w-lg space-y-4">
 
                 {/* Score */}
-                <div className="bg-white border border-gray-200 rounded-2xl px-5 py-5">
-                  <div className="flex items-center justify-between mb-4">
+                <div className="bg-white border border-gray-200 rounded-2xl px-6 py-6">
+                  <div className="flex items-center justify-between mb-5">
                     <h2 className="text-base font-bold text-gray-900 leading-snug pr-4">{selected.name}</h2>
-                    <div className={`shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-xl ${sc.bg} border ${sc.border}`}>
-                      <span className={`text-xl font-black tabular-nums ${sc.text}`}>{selected.score}</span>
-                      <span className={`text-xs ${sc.text} opacity-50`}>/10</span>
+                    <div className={`shrink-0 flex items-center gap-1 px-4 py-2 rounded-xl ${sc.bg} border ${sc.border}`}>
+                      <span className={`text-2xl font-black tabular-nums ${sc.text}`}>{selected.score}</span>
+                      <span className={`text-sm ${sc.text} opacity-50`}>/10</span>
                     </div>
                   </div>
                   <ScoreBar score={selected.score} />
                 </div>
 
                 {/* Comment */}
-                <div className="bg-white border border-gray-200 rounded-2xl px-5 py-5">
-                  <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2.5">
+                <div className="bg-white border border-gray-200 rounded-2xl px-6 py-5">
+                  <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">
                     Комментарий
                   </p>
                   <p className="text-sm text-gray-700 leading-relaxed">{selected.comment}</p>
@@ -188,8 +188,8 @@ export function EvaluationView({
 
                 {/* Recommendation */}
                 {evaluation.priority && (
-                  <div className="bg-gray-900 rounded-2xl px-5 py-5">
-                    <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
+                  <div className="bg-gray-900 rounded-2xl px-6 py-5">
+                    <p className="text-[11px] font-semibold text-gray-600 uppercase tracking-wider mb-3">
                       Рекомендация
                     </p>
                     <p className="text-sm text-white leading-relaxed">{evaluation.priority}</p>
@@ -201,21 +201,21 @@ export function EvaluationView({
           </div>
 
           {/* ── Col 3: Top errors (fixed right) ── */}
-          <div className="w-80 shrink-0 border-l border-gray-100 bg-white overflow-y-auto px-5 py-6">
-            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          <div className="w-72 shrink-0 border-l border-gray-100 overflow-y-auto px-6 py-6 bg-white">
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-5">
               Главные ошибки сессии
             </p>
 
             {evaluation.top_errors?.length > 0 ? (
               <div className="space-y-4">
                 {evaluation.top_errors.map((err, i) => (
-                  <div key={i} className="rounded-xl border border-gray-200 overflow-hidden">
+                  <div key={i} className="rounded-2xl border border-gray-100 bg-gray-50 overflow-hidden">
                     <div className="flex">
-                      <div className="w-1 bg-red-400 shrink-0" />
+                      <div className="w-1 bg-red-400 shrink-0 rounded-l-2xl" />
                       <div className="flex-1 px-4 py-4 space-y-3">
 
-                        <div className="flex items-start gap-2">
-                          <span className="w-5 h-5 rounded-full bg-red-100 text-red-600 text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                        <div className="flex items-start gap-2.5">
+                          <span className="w-5 h-5 rounded-full bg-red-100 text-red-500 text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
                             {i + 1}
                           </span>
                           <p className="text-xs font-bold text-gray-900 leading-snug">{err.title}</p>
@@ -223,7 +223,7 @@ export function EvaluationView({
 
                         <p className="text-xs text-gray-500 leading-relaxed pl-7">{err.what}</p>
 
-                        <div className="ml-7 bg-green-50 border border-green-100 rounded-lg px-3 py-2.5">
+                        <div className="ml-7 bg-green-50 border border-green-100 rounded-xl px-3 py-2.5">
                           <p className="text-[10px] font-semibold text-green-700 uppercase tracking-wider mb-1">
                             Как улучшить
                           </p>

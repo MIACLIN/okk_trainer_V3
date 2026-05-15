@@ -42,8 +42,8 @@ export function ConversationView({ messages, isThinking }: Props) {
         <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
           <div className={`max-w-[72%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
             msg.role === 'user'
-              ? 'bg-indigo-600 text-white rounded-br-sm'
-              : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm shadow-sm'
+              ? 'bg-gray-900 text-white rounded-br-sm'
+              : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm shadow-sm'
           }`}>
             {msg.role === 'patient' && (
               <p className="text-xs text-gray-400 font-medium mb-1">{msg.patientName}</p>
