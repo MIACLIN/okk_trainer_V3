@@ -51,10 +51,6 @@ export function ScenarioSelector({ onSelect }: Props) {
             </svg>
             Пациент
           </button>
-          <div className="flex text-sm gap-4">
-            <span className="font-medium text-gray-900 border-b-2 border-indigo-600 pb-0.5 cursor-default">Рекомендованные</span>
-            <span className="text-gray-400">Все</span>
-          </div>
         </div>
       </div>
 
@@ -74,7 +70,6 @@ export function ScenarioSelector({ onSelect }: Props) {
         )}
         {!loading && !error && (
           <>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-5">Рекомендованные</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {scenarios.map(s => (
                 <PatientCard
