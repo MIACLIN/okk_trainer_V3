@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from gtts import gTTS
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from faster_whisper import WhisperModel
 from pydantic import BaseModel
 
 import database
@@ -28,7 +27,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
+# Whisper loaded lazily — only if Yandex STT is unavailable
+_whisper_model = None
+
+def _get_whisper():
+    global _whisper_model
+    if _whisper_model is None:
+        from faster_whisper import WhisperModel
+        _whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
+        print("[STT] Whisper model loaded")
+    return _whisper_model
 
 database.init_db()
 
@@ -80,16 +88,45 @@ async def text_to_audio_base64(text: str, gender: str = "female") -> str:
     return await asyncio.to_thread(_gtts)
 
 
-def audio_base64_to_text(audio_b64: str) -> str:
+async def audio_base64_to_text(audio_b64: str) -> str:
+    import asyncio
     audio_bytes = base64.b64decode(audio_b64)
-    with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as f:
-        f.write(audio_bytes)
-        tmp_path = f.name
-    try:
-        segments, _ = whisper_model.transcribe(tmp_path, language="ru")
-        return " ".join(s.text for s in segments).strip()
-    finally:
-        os.unlink(tmp_path)
+
+    yandex_key    = os.environ.get("YANDEX_TTS_KEY")
+    yandex_folder = os.environ.get("YANDEX_FOLDER_ID")
+
+    if yandex_key and yandex_folder:
+        try:
+            def _yandex_stt():
+                import requests as req
+                r = req.post(
+                    "https://stt.api.cloud.yandex.net/speech/v1/stt:recognize",
+                    headers={"Authorization": f"Api-Key {yandex_key}"},
+                    params={"folderId": yandex_folder, "lang": "ru-RU", "format": "oggopus"},
+                    data=audio_bytes,
+                    timeout=15,
+                )
+                r.raise_for_status()
+                return r.json().get("result", "")
+
+            text = await asyncio.to_thread(_yandex_stt)
+            print(f"[STT] Yandex OK: {text[:60]}")
+            return text
+        except Exception as e:
+            print(f"[STT] Yandex failed: {e}, falling back to Whisper")
+
+    # Fallback: local faster-whisper
+    def _whisper():
+        with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as f:
+            f.write(audio_bytes)
+            tmp_path = f.name
+        try:
+            segments, _ = _get_whisper().transcribe(tmp_path, language="ru")
+            return " ".join(s.text for s in segments).strip()
+        finally:
+            os.unlink(tmp_path)
+
+    return await asyncio.to_thread(_whisper)
 
 
 # ---------- schemas ----------
@@ -224,7 +261,7 @@ async def send_message(req: MessageRequest):
     if not patient_agent.session_exists(req.session_id):
         raise HTTPException(status_code=404, detail="Session not found")
 
-    user_text = audio_base64_to_text(req.audio_base64)
+    user_text = await audio_base64_to_text(req.audio_base64)
 
     if not user_text:
         raise HTTPException(status_code=422, detail="Не удалось распознать речь — говорите чётче")
