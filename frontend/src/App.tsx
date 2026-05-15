@@ -214,9 +214,6 @@ export default function App() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-semibold text-gray-900">{activeScenario.patient_name}</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full border border-gray-200 bg-gray-100 font-medium text-gray-600">
-                          DISC {activeScenario.patient_disc_type}
-                        </span>
                       </div>
                       <p className="text-xs text-gray-400 mt-0.5">
                         <span className="text-gray-500 font-medium">Контекст</span>{' '}

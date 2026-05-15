@@ -87,12 +87,6 @@ export function PatientDetailModal({ scenario: s, onStart, onClose, loading }: P
             </div>
           </div>
 
-          {/* DISC */}
-          <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-gray-50 text-sm font-medium text-gray-700">
-            <span className="w-2 h-2 rounded-full bg-gray-400" />
-            DISC: {s.patient_disc_type}
-          </div>
-
           {/* Opening line */}
           <div>
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Первая реплика пациента</p>

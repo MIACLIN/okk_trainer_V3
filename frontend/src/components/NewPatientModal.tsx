@@ -120,7 +120,7 @@ export function NewPatientModal({ onCreated, onClose }: Props) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Тип DISC</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Тип характера</label>
               <select
                 value={discType}
                 onChange={e => setDiscType(e.target.value)}
@@ -131,10 +131,9 @@ export function NewPatientModal({ onCreated, onClose }: Props) {
             </div>
           </div>
 
-          {/* DISC hint */}
-          <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium ${disc.bg}`}>
-            <span className="w-1.5 h-1.5 rounded-full bg-current" />
-            {discType} — {disc.label}
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-gray-50 text-xs font-medium text-gray-600">
+            <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+            {disc.label}
           </div>
 
           {/* Reason */}

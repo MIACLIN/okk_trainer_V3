@@ -182,11 +182,6 @@ function PatientCard({
           <p className="text-gray-500 text-xs mt-1 leading-relaxed">{s.description}</p>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 w-fit">
-          <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-          DISC {s.patient_disc_type}
-        </span>
-
         <span className="self-start text-xs px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 border border-gray-200 font-medium">
           {s.skill_focus}
         </span>
